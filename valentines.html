@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Do You Want to Go on a Date?</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top, #ffd2e2, #ff85b9 35%, #b61876 100%);
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '💘';
+      position: fixed;
+      top: 20px;
+      left: 18px;
+      font-size: 2rem;
+      opacity: 0.65;
+    }
+
+    .card {
+      position: relative;
+      width: min(100%, 460px);
+      padding: 36px;
+      border-radius: 32px;
+      background: rgba(255,255,255,0.18);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.32);
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 3.4vw, 3.3rem);
+      letter-spacing: 0.08em;
+      text-shadow: 0 1px 20px rgba(255,255,255,0.4);
+    }
+
+    p {
+      margin: 0 0 24px;
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      position: relative;
+      min-height: 70px;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 14px 24px;
+      border-radius: 999px;
+      min-width: 120px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      font-weight: 700;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.14);
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.18);
+    }
+
+    .yes {
+      background: #ffffff;
+      color: #d92074;
+    }
+
+    .no {
+      background: rgba(255,255,255,0.25);
+      color: #ffffff;
+      position: relative;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .field {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      opacity: 0.85;
+    }
+
+    select,
+    input[type="date"] {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: none;
+      font-size: 1rem;
+      color: #381f3b;
+      background: rgba(255,255,255,0.9);
+      outline: none;
+    }
+
+    input[type="date"] {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .answer {
+      margin-top: 24px;
+      font-size: 1.18rem;
+      min-height: 2.4em;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      line-height: 1.6;
+    }
+
+    .answer.visible {
+      opacity: 1;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div id="questionSection">
+      <h1>Do you want to go on a date?</h1>
+      <p>Choose your answer, but be careful — the "No" button is feeling shy and a little playful! 💌</p>
+      <div class="button-row" id="buttonRow">
+        <button class="yes" id="yesButton">Yes</button>
+        <button class="no" id="noButton">No</button>
+      </div>
+    </div>
+
+    <div class="hidden" id="detailsSection">
+      <h1>Pick a date 🌟</h1>
+      <p>Choose a day, then select a cute plan for us.</p>
+      <div class="field">
+        <label for="calendarInput">Choose a calendar date</label>
+        <input type="date" id="calendarInput" />
+      </div>
+      <div class="field">
+        <label for="dateSelect">Choose a date idea</label>
+        <select id="dateSelect">
+          <option>☕ Cute café chat</option>
+          <option>🍱 Lunch picnic</option>
+          <option>🌳 Park stroll</option>
+          <option>🎡 Fun fair adventure</option>
+        </select>
+      </div>
+      <button class="yes" id="planButton">Make it official 💖</button>
+    </div>
+
+    <div class="answer" id="answerText"></div>
+  </div>
+
+  <script>
+    const yesButton = document.getElementById('yesButton');
+    const noButton = document.getElementById('noButton');
+    const questionSection = document.getElementById('questionSection');
+    const detailsSection = document.getElementById('detailsSection');
+    const planButton = document.getElementById('planButton');
+    const answerText = document.getElementById('answerText');
+    const dateSelect = document.getElementById('dateSelect');
+    const calendarInput = document.getElementById('calendarInput');
+
+    function moveNoButton() {
+      const maxX = 120;
+      const maxY = 18;
+      const x = Math.floor(Math.random() * maxX) - maxX / 2;
+      const y = Math.floor(Math.random() * maxY) - maxY / 2;
+      noButton.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    yesButton.addEventListener('click', () => {
+      questionSection.classList.add('hidden');
+      detailsSection.classList.remove('hidden');
+      answerText.textContent = 'Yay! 💖 Pick a date from the calendar first, then choose a cute plan.';
+      answerText.classList.add('visible');
+      yesButton.blur();
+      noButton.style.transform = 'translate(0, 0)';
+    });
+
+    noButton.addEventListener('mouseenter', moveNoButton);
+    noButton.addEventListener('click', event => {
+      event.preventDefault();
+      moveNoButton();
+      noButton.blur();
+    });
+
+    planButton.addEventListener('click', () => {
+      const calendarDate = calendarInput.value;
+      const dateChoice = dateSelect.value;
+
+      if (!calendarDate) {
+        answerText.textContent = 'Please choose a sweet date from the calendar first! 🗓️';
+        answerText.classList.add('visible');
+        return;
+      }
+
+      answerText.textContent = `Perfect! 🌹 ${calendarDate} will be our day, and we will go on ${dateChoice}. So cute!`;
+      answerText.classList.add('visible');
+      planButton.blur();
+    });
+  </script>
+</body>
+</html>
